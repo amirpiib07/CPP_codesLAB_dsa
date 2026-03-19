@@ -48,11 +48,37 @@ public:
 
 int main() {
     LinkedList L;
-    L.insertAtTail(10);
-    L.insertAtTail(20);
-    L.insertAtTail(30);
-    L.insertAtTail(40);
-    L.insertAtTail(50);
-    L.display();
+    int choice, data;
+
+    do {
+        cout << "\n===== LINKED LIST MENU =====\n";
+        cout << "1. Insert At Tail\n";
+        cout << "2. Display\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+            case 1:
+                cout << "Enter data: ";
+                cin >> data;
+                L.insertAtTail(data);
+                break;
+
+            case 2:
+                L.display();
+                break;
+
+            case 3:
+                cout << "Exiting program...\n";
+                break;
+
+            default:
+                cout << "Invalid choice\n";
+        }
+
+    } while (choice != 3);
+
     return 0;
 }

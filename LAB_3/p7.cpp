@@ -43,11 +43,15 @@ public:
             tail = tail->next;
         }
         tail->next = temp;
-        tail = temp;
         return;
     }
 
     void display() {
+        if (head == NULL) {
+            cout << "Empty List" << endl;
+            return;
+        }
+
         node *temp = head;
         while (temp != NULL) {
             cout << temp->data << "->";
@@ -57,31 +61,33 @@ public:
     }
 
     void reverse(int k) {
+
         if (head == NULL) {
             cout << "Empty" << endl;
             return;
         }
-        //use dummy node to simplify the problem of head handling
+
+        if (k <= 1) return;
+
         node *dummy = new node(-1);
         dummy->next = head;
         node *prevGroupTail = dummy;
         node *curr = head;
 
-        //count total nodes
         int count = 0;
         while (curr != NULL) {
             curr = curr->next;
             count++;
         }
+
         curr = head;
 
-        //reverse the node in k group first
         while (count >= k) {
+
             node *groupHead = curr;
             node *prev = NULL;
             node *ford = NULL;
 
-            //reverse k node first
             for (int i = 0; i < k; i++) {
                 ford = curr->next;
                 curr->next = prev;
@@ -89,35 +95,65 @@ public:
                 curr = ford;
             }
 
-            //connect previous group node with the current
             prevGroupTail->next = prev;
             groupHead->next = curr;
 
-            //move previous group tail
             prevGroupTail = groupHead;
-
             count -= k;
         }
+
         head = dummy->next;
-        return;
+        delete dummy;   // fix memory leak
     }
 };
 
-
 int main() {
     LinkedList L;
-    L.insertAtHead(8);
-    L.insertAtHead(7);
-    L.insertAtHead(6);
-    L.insertAtHead(5);
-    L.insertAtHead(4);
-    L.insertAtHead(3);
-    L.insertAtHead(2);
-    L.insertAtHead(1);
-    cout<<"original linked list"<<endl;
-    L.display();
-    L.reverse(3);
-    cout<<"reversed linked list"<<endl;
-    L.display();
+    int choice, data, k;
+
+    do {
+        cout << "\n===== MENU =====\n";
+        cout << "1. Insert At Head\n";
+        cout << "2. Insert At Tail\n";
+        cout << "3. Reverse in K Group\n";
+        cout << "4. Display\n";
+        cout << "5. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+        case 1:
+            cout << "Enter data: ";
+            cin >> data;
+            L.insertAtHead(data);
+            break;
+
+        case 2:
+            cout << "Enter data: ";
+            cin >> data;
+            L.insertAtTail(data);
+            break;
+
+        case 3:
+            cout << "Enter k: ";
+            cin >> k;
+            L.reverse(k);
+            break;
+
+        case 4:
+            L.display();
+            break;
+
+        case 5:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice\n";
+        }
+
+    } while (choice != 5);
+
     return 0;
 }

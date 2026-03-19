@@ -22,29 +22,48 @@ public:
             cout << "Linked List is Empty" << endl;
             return;
         }
+
         if (position > size || position <= 0) {
             cout << "invalid node" << endl;
             return;
         }
-        if (head->next == NULL) {
-            head = NULL;
-            cout << "Linked List is now become Empty" << endl;
+
+        // Delete head case
+        if (position == size) {
+            node *del = head;
+            head = head->next;
+            delete del;
+            size--;
+            if (head == NULL) {
+                cout << "Linked List is now become Empty" << endl;
+            }
             return;
         }
+
         node *slow = head;
         node *fast = head;
+
         for (int i = 0; i < position; i++) {
             fast = fast->next;
         }
 
-        while (fast != NULL && fast->next != NULL) {
+        while (fast->next != NULL) {
             slow = slow->next;
             fast = fast->next;
         }
+
+        node *del = slow->next;
         slow->next = slow->next->next;
+        delete del;
+        size--;
     }
 
     void display() {
+        if (head == NULL) {
+            cout << "Linked List is Empty" << endl;
+            return;
+        }
+
         node *temp = head;
         while (temp != NULL) {
             cout << temp->data << "->";
@@ -52,7 +71,6 @@ public:
         }
         cout << "NULL" << endl;
     }
-
 
     void insertAtHead(int data) {
         node *temp = new node(data);
@@ -70,14 +88,44 @@ public:
 
 int main() {
     LinkedList L;
-    // //L.insertAtHead(5);
-    // L.insertAtHead(4);
-    L.insertAtHead(3);
-    // L.insertAtHead(2);
-    // L.insertAtHead(1);
+    int choice, data, position;
 
-    L.display();
-    L.delteNthNodeFromEnd(1);
-    L.display();
+    do {
+        cout << "\n===== MENU =====\n";
+        cout << "1. Insert At Head\n";
+        cout << "2. Delete Nth Node From End\n";
+        cout << "3. Display\n";
+        cout << "4. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+        case 1:
+            cout << "Enter data: ";
+            cin >> data;
+            L.insertAtHead(data);
+            break;
+
+        case 2:
+            cout << "Enter position from end: ";
+            cin >> position;
+            L.delteNthNodeFromEnd(position);
+            break;
+
+        case 3:
+            L.display();
+            break;
+
+        case 4:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice\n";
+        }
+
+    } while (choice != 4);
+
     return 0;
 }

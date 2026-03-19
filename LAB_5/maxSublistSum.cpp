@@ -1,110 +1,108 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 class node {
 public:
     int data;
-    node *next;
-    node *prev;
+    node* next;
+    node* prev;
 
     node(int data) {
+        this->data = data;
         this->next = NULL;
         this->prev = NULL;
-        this->data = data;
     }
 };
 
 class DoubleLL {
-    node *head = NULL;
-    node *tail = NULL;
-    int size = 0;
+
+    node* head = NULL;
+    node* tail = NULL;
 
 public:
-    void pushFront(int data) {
-        size++;
-        node *temp = new node(data);
+
+    void pushBack(int data) {
+
+        node* temp = new node(data);
+
         if (head == NULL) {
-            head = temp;
-            tail = temp;
+            head = tail = temp;
             return;
         }
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-        return;
+
+        tail->next = temp;
+        temp->prev = tail;
+        tail = temp;
     }
 
     void print() {
-        node *temp = head;
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        node* temp = head;
+
         while (temp != NULL) {
-            cout << temp->data << " ";
+            cout << temp->data << " -> ";
             temp = temp->next;
         }
-        cout << endl;
+        cout << "NULL\n";
     }
 
-    int maxSublistSum() {
-        if (head==NULL) {
-            cout << "List is empty" << endl;
-            return 0;
+    void checkPalindrome() {
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
         }
-        node *temp = head;
-        int currentSum = temp->data;
-        int maxSum = temp->data;
 
-        int count=1;
-        int start=0, end=0;
-        temp=temp->next;
-        while (temp!=NULL) {
+        node* left = head;
+        node* right = tail;
 
-            if (temp->data> currentSum+temp->data) {
-                currentSum = temp->data;
-                start=count;
-                end=start;
+        bool isPalindrome = true;
+
+        while (left != NULL && right != NULL &&
+               left != right && right->next != left) {
+
+            if (left->data != right->data) {
+                isPalindrome = false;
+                break;
             }
-            else {
-                currentSum+=temp->data;
-                end++;
-            }
-            if (currentSum>maxSum) {
-                maxSum = currentSum;
-            }
-            temp = temp->next;
-            count++;
 
-        }
+            left = left->next;
+            right = right->prev;
+               }
 
-        temp = head;
-        for (int i=0;i<start;i++) {
-            temp = temp->next;
-        }
-        temp->prev=nullptr;
-        head=temp;
-        for (int i=start;i<end-1;i++) {
-            temp = temp->next;
-        }
-        temp->next = nullptr;
-        return maxSum;
-
+        if (isPalindrome)
+            cout << "The doubly linked list is a PALINDROME.\n";
+        else
+            cout << "The doubly linked list is NOT a palindrome.\n";
     }
 };
 
 int main() {
+
     DoubleLL l;
-    l.pushFront(-8);
-    l.pushFront(7);
-    l.pushFront(-1);
-    l.pushFront(4);
-    l.pushFront(5);
-    l.pushFront(-4);
-    l.pushFront(3);
+
+    int n, data;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> data;
+        l.pushBack(data);
+    }
+
+    cout << "\nEntered List:\n";
     l.print();
-    cout << l.maxSublistSum() << endl;
-    l.print();
 
+    cout << endl;
 
-
+    l.checkPalindrome();
 
     return 0;
 }

@@ -4,7 +4,7 @@ using namespace std;
 class node {
 public:
     int data;
-    node *next;
+    node* next;
 
     node(int data) {
         this->data = data;
@@ -12,95 +12,95 @@ public:
     }
 };
 
-class LinkedList {
-    node *head = NULL;
-    int size = 0;
+/* ===== DISPLAY CIRCULAR LIST ===== */
 
-public:
-    void insertAtHead(int data) {
-        node *temp = new node(data);
-        size++;
-        if (head == NULL) {
-            head = temp;
-            head->next = NULL;
-            return;
-        }
-        temp->next = head;
-        head = temp;
+void display(node* head) {
+
+    if (head == NULL) {
+        cout << "List is empty\n";
         return;
     }
 
-    void insertAtTail(int data) {
-        node *temp = new node(data);
-        size++;
-        if (head == NULL) {
-            head = temp;
-            head->next = NULL;
-            return;
-        }
-        node *tail = head;
-        while (tail->next != NULL) {
-            tail = tail->next;
-        }
-        tail->next = temp;
-        tail = temp;
-        return;
+    node* temp = head;
+
+    do {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    } while (temp != head);
+
+    cout << "(back to " << head->data << ")" << endl;
+}
+
+/* ===== CHECK SORTED FUNCTION ===== */
+
+bool isSorted(node* head) {
+
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return false;
     }
 
-    void display() {
-        node *temp = head;
-        while (temp != NULL) {
-            cout << temp->data << "->";
-            temp = temp->next;
-        }
-        cout << "NULL" << endl;
-    }
+    if (head->next == head)
+        return true;   // single node always sorted
 
+    node* temp = head;
 
+    do {
 
+        if (temp->next != head &&
+            temp->data > temp->next->data) {
+            return false;
+            }
 
-};
-   bool sorted(node* head) {
-       if (head == NULL) {
-           cout << "NULL" << endl;
-           return false;
-       }
+        temp = temp->next;
 
-       node* temp=head;
-       while (temp->next != head) {
-           temp = temp->next;
-       }
-       temp->next = nullptr;
-       if (head->next == NULL) {
-           return true;
-       }
-       temp=head;
-       while (temp!=nullptr && temp->next!=nullptr) {
-           if (temp->data > temp->next->data) {
-               return false;
-           }
-           temp=temp->next;
-       }
-       return true;
-   }
+    } while (temp != head);
+
+    return true;
+}
+
+/* ===== MAIN ===== */
 
 int main() {
-    node* a=new node(10);
-       node* b=new node(20);
-       node* c=new node(30);
-       node* d=new node(40);
-       node* e=new node(50);
-       node* f=new node(60);
-       node* g=new node(1);
-       a->next=b;
 
+    int n, data;
 
-       b->next=c;
-       c->next=d;
-       d->next=e;
-       e->next=f;
-       f->next=g;
-       g->next=a;
-       cout<<sorted(a);
+    cout << "Enter number of nodes: ";
+    cin >> n;
+
+    if (n <= 0) {
+        cout << "Invalid size\n";
+        return 0;
+    }
+
+    node* head = NULL;
+    node* tail = NULL;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+
+        cin >> data;
+        node* temp = new node(data);
+
+        if (head == NULL) {
+            head = tail = temp;
+        }
+        else {
+            tail->next = temp;
+            tail = temp;
+        }
+    }
+
+    // Make circular
+    tail->next = head;
+
+    cout << "\nCircular List:\n";
+    display(head);
+
+    if (isSorted(head))
+        cout << "\nThe circular linked list is SORTED.\n";
+    else
+        cout << "\nThe circular linked list is NOT sorted.\n";
+
     return 0;
 }

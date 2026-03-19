@@ -35,7 +35,12 @@ public:
             cout << "linked list is empty" << endl;
             return;
         }
+
+        node *del = head;
         head = head->next;
+        delete del;
+        size--;
+
         if (head == NULL) {
             cout << "linked list is now become empty" << endl;
         }
@@ -43,6 +48,11 @@ public:
     }
 
     void display() {
+        if (head == NULL) {
+            cout << "linked list is empty" << endl;
+            return;
+        }
+
         node *temp = head;
         while (temp != NULL) {
             cout << temp->data << "->";
@@ -54,9 +64,42 @@ public:
 
 int main() {
     LinkedList L;
-    L.insertFront(10);
-    L.insertFront(20);
-    L.undo();
-    L.display();
+    int choice, data;
+
+    do {
+        cout << "\n===== MENU =====\n";
+        cout << "1. Insert Front\n";
+        cout << "2. Undo (Delete Front)\n";
+        cout << "3. Display\n";
+        cout << "4. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+            case 1:
+                cout << "Enter data: ";
+                cin >> data;
+                L.insertFront(data);
+                break;
+
+            case 2:
+                L.undo();
+                break;
+
+            case 3:
+                L.display();
+                break;
+
+            case 4:
+                cout << "Exiting...\n";
+                break;
+
+            default:
+                cout << "Invalid choice\n";
+        }
+
+    } while (choice != 4);
+
     return 0;
 }

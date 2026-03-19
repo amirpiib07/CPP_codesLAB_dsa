@@ -48,6 +48,11 @@ public:
     }
 
     void display() {
+        if (head == NULL) {
+            cout << "Linked List is Empty" << endl;
+            return;
+        }
+
         node *temp = head;
         while (temp != NULL) {
             cout << temp->data << "->";
@@ -56,42 +61,93 @@ public:
         cout << "NULL" << endl;
     }
 
-
     void detectCycle() {
+
+        if (head == NULL) {
+            cout << "Linked List is Empty" << endl;
+            return;
+        }
+
         node *slow = head;
         node *fast = head;
+        bool cycleFound = false;
+
         while (fast != NULL && fast->next != NULL) {
             slow = slow->next;
             fast = fast->next->next;
+
             if (slow == fast) {
                 cout << "Cycle detected" << endl;
+                cycleFound = true;
                 break;
             }
         }
-        if (slow == fast) {
+
+        if (cycleFound) {
             slow = head;
             while (slow != fast) {
                 slow = slow->next;
                 fast = fast->next;
             }
+
             while (fast->next != slow) {
                 fast = fast->next;
             }
+
             fast->next = NULL;
+            cout << "Cycle removed" << endl;
             return;
         }
 
         cout << "cycle not present in this linked list" << endl;
-        return;
     }
 };
 
 int main() {
     LinkedList L;
-    L.insertAtHead(10);
-    L.insertAtHead(20);
-    L.insertAtHead(30);
-    L.detectCycle();
-    L.display();
+    int choice, data;
+
+    do {
+        cout << "\n===== MENU =====\n";
+        cout << "1. Insert At Head\n";
+        cout << "2. Insert At Tail\n";
+        cout << "3. Detect & Remove Cycle\n";
+        cout << "4. Display\n";
+        cout << "5. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+        case 1:
+            cout << "Enter data: ";
+            cin >> data;
+            L.insertAtHead(data);
+            break;
+
+        case 2:
+            cout << "Enter data: ";
+            cin >> data;
+            L.insertAtTail(data);
+            break;
+
+        case 3:
+            L.detectCycle();
+            break;
+
+        case 4:
+            L.display();
+            break;
+
+        case 5:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice\n";
+        }
+
+    } while (choice != 5);
+
     return 0;
 }

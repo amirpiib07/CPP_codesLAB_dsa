@@ -1,98 +1,126 @@
 #include <iostream>
-#include <vector>
+#include <unordered_map>
 using namespace std;
 
 class node {
 public:
     int data;
-    node *next;
-    node *prev;
+    node* next;
+    node* prev;
 
     node(int data) {
+        this->data = data;
         this->next = NULL;
         this->prev = NULL;
-        this->data = data;
     }
 };
 
 class DoubleLL {
-    node *head = NULL;
-    node *tail = NULL;
-    int size = 0;
+
+    node* head = NULL;
+    node* tail = NULL;
 
 public:
-    void pushFront(int data) {
-        size++;
-        node *temp = new node(data);
+
+    void pushBack(int data) {
+
+        node* temp = new node(data);
+
         if (head == NULL) {
-            head = temp;
-            tail = temp;
+            head = tail = temp;
             return;
         }
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-        return;
+
+        tail->next = temp;
+        temp->prev = tail;
+        tail = temp;
     }
 
     void print() {
-        node *temp = head;
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        node* temp = head;
+
         while (temp != NULL) {
-            cout << temp->data << " ";
+            cout << temp->data << " -> ";
             temp = temp->next;
         }
-        cout << endl;
+        cout << "NULL\n";
     }
 
-    void deleteDuplicates() {
-        vector<int> ans;
-        node *temp = head;
+    void deleteAllDuplicates() {
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        unordered_map<int,int> freq;
+
+        node* temp = head;
+
+        // Step 1: Count frequency
         while (temp != NULL) {
-            ans.push_back(temp->data);
+            freq[temp->data]++;
             temp = temp->next;
         }
-        int n = ans.size();
-        vector<int> nond;
-        for (int i = 0; i < ans.size(); i++) {
-            int count = 0;
-            for (int j = 0; j < ans.size(); j++) {
-                if (ans[i] == ans[j]) {
-                    count++;
+
+        // Step 2: Rebuild list with unique elements
+        temp = head;
+
+        node* newHead = NULL;
+        node* newTail = NULL;
+
+        while (temp != NULL) {
+
+            if (freq[temp->data] == 1) {
+
+                node* newNode = new node(temp->data);
+
+                if (newHead == NULL) {
+                    newHead = newTail = newNode;
+                }
+                else {
+                    newTail->next = newNode;
+                    newNode->prev = newTail;
+                    newTail = newNode;
                 }
             }
-            if (count==1) {
-                nond.push_back(ans[i]);
-            }
+
+            temp = temp->next;
         }
 
-        node *c = new node(nond[0]);
-        tail = head = c;
-
-        for (int i = 1; i < nond.size(); i++) {
-            node *n = new node(nond[i]);
-            if (head == NULL) {
-                tail = head = temp;
-            } else {
-                tail->next = n;
-                n->prev = tail;
-                tail = n;
-            }
-        }
+        head = newHead;
+        tail = newTail;
     }
-    };
+};
 
-    int main() {
-        DoubleLL l;
-        l.pushFront(3);
-        l.pushFront(5);
-        l.pushFront(2);
-        l.pushFront(4);
-        l.pushFront(2);
-        l.pushFront(5);
-        l.print();
-        l.deleteDuplicates();
-        l.print();
+int main() {
 
+    DoubleLL l;
 
-        return 0;
+    int n, data;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> data;
+        l.pushBack(data);
     }
+
+    cout << "\nOriginal List:\n";
+    l.print();
+
+    l.deleteAllDuplicates();
+
+    cout << "\nList after removing all duplicates:\n";
+    l.print();
+
+    return 0;
+}

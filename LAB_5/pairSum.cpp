@@ -1,77 +1,120 @@
 #include <iostream>
-#include <vector>
-using namespace  std;
+using namespace std;
+
 class node {
 public:
     int data;
-    node *next;
-    node *prev;
+    node* next;
+    node* prev;
+
     node(int data) {
+        this->data = data;
         this->next = NULL;
         this->prev = NULL;
-        this->data = data;
     }
 };
 
 class DoubleLL {
-    node* head=NULL;
-    node* tail=NULL;
+    node* head = NULL;
+    node* tail = NULL;
+
 public:
-    void pushFront(int data) {
-        node *temp = new node(data);
+
+    void pushBack(int data) {
+
+        node* temp = new node(data);
+
         if (head == NULL) {
-            head = temp;
-            tail=temp;
+            head = tail = temp;
             return;
         }
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-        return;
+
+        tail->next = temp;
+        temp->prev = tail;
+        tail = temp;
     }
+
     void print() {
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
         node* temp = head;
+
         while (temp != NULL) {
-            cout << temp->data<< " ";
+            cout << temp->data << " ";
             temp = temp->next;
         }
         cout << endl;
     }
 
-    vector<vector<int>> pairSum(int target) {
-        vector<vector<int>> ans;
-        node* i=head;
-        node* j=tail;
-        while (i!=j&&i!=j->prev) {
-            if (target==i->data+j->data) {
-                vector<int>v={i->data,j->data};
-                ans.push_back(v);
-                i=i->next;
-                j=j->prev;
+    void pairSum(int target) {
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        node* left = head;
+        node* right = tail;
+
+        int count = 0;
+
+        cout << "Pairs with given sum:\n";
+
+        while (left != NULL && right != NULL &&
+               left != right && right->next != left) {
+
+            int sum = left->data + right->data;
+
+            if (sum == target) {
+
+                cout << "(" << left->data << ", "
+                     << right->data << ")" << endl;
+
+                count++;
+                left = left->next;
+                right = right->prev;
             }
-            else if (target<i->data+j->data) {
-                i=i->next;
+            else if (sum < target) {
+                left = left->next;
             }
             else {
-                j=j->prev;
+                right = right->prev;
             }
         }
-        return ans;
 
+        if (count == 0)
+            cout << "No pair found\n";
+        else
+            cout << "Total pairs = " << count << endl;
     }
 };
 
 int main() {
+
     DoubleLL l;
-    l.pushFront(1);
-    l.pushFront(2);
-    l.pushFront(4);
-    l.pushFront(5);
-    l.pushFront(6);
-    l.print();
-    for (vector<int> i: l.pairSum(7)) {
-        for (int j: i) cout << j << " ";
-        cout << endl;
+
+    int n, data, target;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements in sorted order:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> data;
+        l.pushBack(data);
     }
+
+    cout << "\nList: ";
+    l.print();
+
+    cout << "Enter target sum: ";
+    cin >> target;
+
+    l.pairSum(target);
+
     return 0;
 }

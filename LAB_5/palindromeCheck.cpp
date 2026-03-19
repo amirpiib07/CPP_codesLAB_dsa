@@ -1,78 +1,122 @@
 #include <iostream>
-#include <vector>
+#include <climits>
 using namespace std;
 
 class node {
 public:
     int data;
-    node *next;
-    node *prev;
+    node* next;
+    node* prev;
 
     node(int data) {
+        this->data = data;
         this->next = NULL;
         this->prev = NULL;
-        this->data = data;
     }
 };
 
 class DoubleLL {
-    node *head = NULL;
-    node *tail = NULL;
-    int size = 0;
+
+    node* head = NULL;
+    node* tail = NULL;
 
 public:
-    void pushFront(int data) {
-        size++;
-        node *temp = new node(data);
+
+    void pushBack(int data) {
+
+        node* temp = new node(data);
+
         if (head == NULL) {
-            head = temp;
-            tail = temp;
+            head = tail = temp;
             return;
         }
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-        return;
+
+        tail->next = temp;
+        temp->prev = tail;
+        tail = temp;
     }
 
     void print() {
-        node *temp = head;
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        node* temp = head;
+
         while (temp != NULL) {
-            cout << temp->data << " ";
+            cout << temp->data << " -> ";
             temp = temp->next;
         }
-        cout << endl;
+        cout << "NULL\n";
     }
 
-    bool check() {
+    void maxSublist() {
+
         if (head == NULL) {
-            cout << "The list is empty" << endl;
-            return false;
+            cout << "List is empty\n";
+            return;
         }
+
+        int maxSum = INT_MIN;
+        int currentSum = 0;
+
         node* temp = head;
-        node* temp1=tail;
-        while (temp1!=temp && temp->prev!=temp1) {
-            if (temp1->data != temp->data) {
-                return false;
+        node* start = head;
+        node* end = head;
+        node* tempStart = head;
+
+        while (temp != NULL) {
+
+            currentSum += temp->data;
+
+            if (currentSum > maxSum) {
+                maxSum = currentSum;
+                start = tempStart;
+                end = temp;
             }
-            temp=temp->next;
-            temp1=temp1->prev;
+
+            if (currentSum < 0) {
+                currentSum = 0;
+                tempStart = temp->next;
+            }
+
+            temp = temp->next;
         }
-        return true;
+
+        cout << "\nMaximum sum sublist:\n";
+
+        node* curr = start;
+        while (curr != end->next) {
+            cout << curr->data << " -> ";
+            curr = curr->next;
+        }
+        cout << "NULL\n";
+
+        cout << "Maximum Sum = " << maxSum << endl;
     }
 };
 
 int main() {
-    DoubleLL l;
-    l.pushFront(3);
-    l.pushFront(5);
-    l.pushFront(2);
-    l.pushFront(2);
-    l.pushFront(5);
-    l.pushFront(3);
-    l.print();
-    cout<<l.check();
 
+    DoubleLL l;
+
+    int n, data;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> data;
+        l.pushBack(data);
+    }
+
+    cout << "\nOriginal List:\n";
+    l.print();
+
+    l.maxSublist();
 
     return 0;
 }

@@ -4,7 +4,7 @@ using namespace std;
 class node {
 public:
     int data;
-    node *next;
+    node* next;
 
     node(int data) {
         this->data = data;
@@ -12,114 +12,109 @@ public:
     }
 };
 
-class LinkedList {
-    node *head = NULL;
-    int size = 0;
+/* ===== DISPLAY FUNCTION ===== */
 
-public:
-    void insertAtHead(int data) {
-        node *temp = new node(data);
-        size++;
-        if (head == NULL) {
-            head = temp;
-            head->next = NULL;
-            return;
-        }
-        temp->next = head;
-        head = temp;
+void display(node* head) {
+
+    if (head == NULL) {
+        cout << "List is empty\n";
         return;
     }
 
-    void insertAtTail(int data) {
-        node *temp = new node(data);
-        size++;
-        if (head == NULL) {
-            head = temp;
-            head->next = NULL;
-            return;
-        }
-        node *tail = head;
-        while (tail->next != NULL) {
-            tail = tail->next;
-        }
-        tail->next = temp;
-        tail = temp;
-        return;
+    node* temp = head;
+
+    do {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    } while (temp != head);
+
+    cout << "(back to " << head->data << ")" << endl;
+}
+
+/* ===== INSERT FUNCTION ===== */
+
+node* insertSorted(node* head, int value) {
+
+    node* newNode = new node(value);
+
+    // Case 1: Empty list
+    if (head == NULL) {
+        newNode->next = newNode;
+        return newNode;
     }
 
-    void display() {
-        node *temp = head;
-        while (temp != NULL) {
-            cout << temp->data << "->";
+    node* temp = head;
+
+    // Case 2: Insert before head (smallest element)
+    if (value <= head->data) {
+
+        // Find last node
+        while (temp->next != head)
             temp = temp->next;
-        }
-        cout << "NULL" << endl;
+
+        temp->next = newNode;
+        newNode->next = head;
+
+        head = newNode;
+        return head;
     }
 
+    // Case 3 & 4: Insert in middle or end
+    while (temp->next != head &&
+           temp->next->data < value) {
 
+        temp = temp->next;
+    }
 
+    newNode->next = temp->next;
+    temp->next = newNode;
 
-};
-   void insert(node* head, int data) {
-       if (head == NULL) {
-           cout << "NULL" << endl;
-           return ;
-       }
+    return head;
+}
 
-       node* temp=head;
-       while (temp->next != head) {
-           temp = temp->next;
-       }
-       node* i=new node(data);
-
-       temp->next = nullptr;
-       node* check=nullptr;
-       temp=head;
-       while (temp!=NULL) {
-           if (data<temp->data) {
-               i->next=temp;
-               if (check!=head)check->next=i;
-               else head=i;
-               break;
-           }
-           check=temp;
-           temp=temp->next;
-       }
-       if (temp==NULL) {
-           check->next=i;
-           check=i;
-       }
-       temp=head;
-       while (temp->next!=NULL) {
-           temp=temp->next;
-       }
-       temp->next=head;
-       temp=head;
-       while (temp->next!=head) {
-           cout << temp->data << "<->";
-           temp=temp->next;
-       }
-       cout<< temp->data << endl;
-       return;
-   }
+/* ===== MAIN ===== */
 
 int main() {
-    node* a=new node(10);
-       node* b=new node(20);
-       node* c=new node(30);
-       node* d=new node(40);
-       node* e=new node(50);
-       node* f=new node(60);
-       node* g=new node(80);
-       a->next=b;
 
+    int n, data, value;
 
-       b->next=c;
-       c->next=d;
-       d->next=e;
-       e->next=f;
-       f->next=g;
-       g->next=a;
-       insert(a,    70);
+    cout << "Enter number of nodes: ";
+    cin >> n;
+
+    node* head = NULL;
+    node* tail = NULL;
+
+    if (n > 0) {
+
+        cout << "Enter elements in sorted order:\n";
+
+        for (int i = 0; i < n; i++) {
+
+            cin >> data;
+            node* temp = new node(data);
+
+            if (head == NULL) {
+                head = tail = temp;
+            } else {
+                tail->next = temp;
+                tail = temp;
+            }
+        }
+
+        // Make circular
+        tail->next = head;
+    }
+
+    cout << "\nOriginal Circular List:\n";
+    display(head);
+
+    cout << "\nEnter value to insert: ";
+    cin >> value;
+
+    head = insertSorted(head, value);
+
+    cout << "\nAfter insertion:\n";
+    display(head);
+
     return 0;
 }

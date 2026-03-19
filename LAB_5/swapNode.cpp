@@ -1,96 +1,153 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 class node {
 public:
     int data;
-    node *next;
-    node *prev;
+    node* next;
+    node* prev;
 
     node(int data) {
+        this->data = data;
         this->next = NULL;
         this->prev = NULL;
-        this->data = data;
     }
 };
 
 class DoubleLL {
-    node *head = NULL;
-    node *tail = NULL;
+
+    node* head = NULL;
+    node* tail = NULL;
     int size = 0;
 
 public:
-    void pushFront(int data) {
+
+    void pushBack(int data) {
+
+        node* temp = new node(data);
         size++;
-        node *temp = new node(data);
+
         if (head == NULL) {
-            head = temp;
-            tail = temp;
+            head = tail = temp;
             return;
         }
-        temp->next = head;
-        head->prev = temp;
-        head = temp;
-        return;
+
+        tail->next = temp;
+        temp->prev = tail;
+        tail = temp;
     }
 
     void print() {
-        node *temp = head;
+
+        if (head == NULL) {
+            cout << "List is empty\n";
+            return;
+        }
+
+        node* temp = head;
+
         while (temp != NULL) {
-            cout << temp->data << " ";
+            cout << temp->data << " -> ";
             temp = temp->next;
         }
-        cout << endl;
+        cout << "NULL\n";
     }
 
-    node* headgroup() {
-        return head;
-    }
+    void swapNodes(int pos1, int pos2) {
 
-    void swap(int m, int n) {
-        if (m==n) return;
-        node* prev1=nullptr,*curr1=head;
-        node* prev2=nullptr, *curr2=head;
-        int count=1;
+        if (pos1 == pos2) return;
 
-        while (curr1 && count<m) {
-            prev1=curr1;
-            curr1=curr1->next;
-            count++;
+        if (pos1 < 1 || pos2 < 1 || pos1 > size || pos2 > size) {
+            cout << "Invalid positions\n";
+            return;
         }
 
-        count=1;
-        while (curr2 && count<n) {
-            prev2=curr2;
-            curr2=curr2->next;
-            count++;
+        if (pos1 > pos2)
+            swap(pos1, pos2);
+
+        node* node1 = head;
+        node* node2 = head;
+
+        for (int i = 1; i < pos1; i++)
+            node1 = node1->next;
+
+        for (int i = 1; i < pos2; i++)
+            node2 = node2->next;
+
+        // If adjacent nodes
+        if (node1->next == node2) {
+
+            node* prev1 = node1->prev;
+            node* next2 = node2->next;
+
+            if (prev1) prev1->next = node2;
+            node2->prev = prev1;
+
+            node2->next = node1;
+            node1->prev = node2;
+
+            node1->next = next2;
+            if (next2) next2->prev = node1;
+
+        } else {
+
+            node* prev1 = node1->prev;
+            node* next1 = node1->next;
+
+            node* prev2 = node2->prev;
+            node* next2 = node2->next;
+
+            if (prev1) prev1->next = node2;
+            if (next1) next1->prev = node2;
+
+            if (prev2) prev2->next = node1;
+            if (next2) next2->prev = node1;
+
+            node1->next = next2;
+            node1->prev = prev2;
+
+            node2->next = next1;
+            node2->prev = prev1;
         }
 
-        if (!curr1 || !curr2) return;
-        if (prev1) prev1->next=curr2;
-        else head=curr2;
-        if (prev2) prev2->next=curr1;
-        else head=curr1;
+        // Update head
+        if (pos1 == 1)
+            head = node2;
+        else if (pos2 == 1)
+            head = node1;
 
-        node* temp=curr1->next;
-        curr1->next=curr2->next;
-        curr2->next=temp;
+        // Update tail
+        if (pos1 == size)
+            tail = node2;
+        else if (pos2 == size)
+            tail = node1;
     }
 };
 
-
-
 int main() {
+
     DoubleLL l;
-    l.pushFront(6);
-    l.pushFront(6);
-    l.pushFront(4);
-    l.pushFront(4);
-    l.pushFront(1);
-    l.pushFront(-1);
+
+    int n, data, pos1, pos2;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> data;
+        l.pushBack(data);
+    }
+
+    cout << "\nOriginal List:\n";
     l.print();
-    l.swap(1,6);
+
+    cout << "\nEnter two positions to swap: ";
+    cin >> pos1 >> pos2;
+
+    l.swapNodes(pos1, pos2);
+
+    cout << "\nList after swapping nodes:\n";
     l.print();
 
     return 0;
