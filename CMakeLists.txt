@@ -35,9 +35,9 @@ add_executable(DSA_CPP_LAB_SVNIT main.cpp
         LAB_5/randomPointers.cpp
         LAB_7/getMinOperation.cpp
         LAB_5B/split.cpp
-        LAB_8/p1.cpp
-        LAB_8/p2.cpp
-        LAB_8/p3.cpp
+        LAB_8/linearQueueUsingArray.cpp
+        LAB_8/QueueUsingLinkedLists.cpp
+        LAB_8/CircularQueue.cpp
         "CF CST/deletionSort.cpp"
         "CF CST/eatingGame.cpp"
         "CF CST/specialityString.cpp"
@@ -52,4 +52,14 @@ add_executable(DSA_CPP_LAB_SVNIT main.cpp
         LAB_6/valueofPo.cpp
         LAB_6/minStack.cpp
         LAB_6/stackUsingLinkedList.cpp
+        LAB_7/nextGreaterElement.cpp
+        LAB_7/stockSpanPRoblem.cpp
+        LAB_7/largestRectangleInHistogram.cpp
+        LAB_7/evaluatePrefixExpression.cpp
+        LAB_7/removeAdjacentDuplicateCharacter.cpp
+        LAB_7/checkRedundantParanthesis.cpp
+        LAB_8/reverseAQueue.cpp
+        LAB_8/countElementinAQueue.cpp
+        LAB_8/maxMinInAQueue.cpp
+        LAB_8/checkPalindromeUsingDequque.cpp
 )
